@@ -4,6 +4,7 @@ Hangman
 '''
 
 from os import system, name
+import random
 
 player = 1
 word_selected = ''
@@ -101,19 +102,40 @@ with open('words.txt', 'rt') as text:
 
 draw_hang_man()
 
-while True:
-    if word_selected == '':
-        for index, word in enumerate(word_set):
-            print(index, word)
-        print('Note: Index is starting from 0')
-        selected_index = int(input('Select the index of the word you want to challege to player 2: '))
-        player = 2
-        print(word_set[selected_index])
-        word_selected = word_set[selected_index]
-        clear()
-    else:
+total_players = int(input('Select number of players 1 or 2: '))
+if total_players == 2:
+    while True:
+        if word_selected == '':
+            for index, word in enumerate(word_set):
+                print(index, word)
+            print('Note: Index is starting from 0')
+            selected_index = int(input('Select the index of the word you want to challege to player 2: '))
+            player = 2
+            print(word_set[selected_index])
+            word_selected = word_set[selected_index]
+            clear()
+        else:
+            if start_flag:
+                correct_guess_letters = list('_'*len(word_selected))
+                print(''.join(correct_guess_letters))
+                start_flag = False
+            guess_letter = input('Enter the letter:')
+            check_guess_letters(guess_letter)
+            draw_hang_man()
+            print(''.join(correct_guess_letters))
+            print('Incorrect attempt', wrong_guess)
+            check_correct_letters()
+            if wrong_guess == max_allowed_chance:
+                print('You lost the game')
+                break
+            elif guess_letter_length == len(word_selected):
+                print('You won the game')
+                break
+else:
+    while True:
         if start_flag:
-            correct_guess_letters = list('_'*len(word_selected))
+            word_selected = random.choice(word_set)
+            correct_guess_letters = list('_' * len(word_selected))
             print(''.join(correct_guess_letters))
             start_flag = False
         guess_letter = input('Enter the letter:')
